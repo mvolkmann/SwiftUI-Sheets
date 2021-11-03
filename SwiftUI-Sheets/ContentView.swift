@@ -1,16 +1,40 @@
-//
-//  ContentView.swift
-//  SwiftUI-Sheets
-//
-//  Created by R. Mark Volkmann on 11/3/21.
-//
-
 import SwiftUI
 
-struct ContentView: View {
+struct MySheetView: View {
+    // Approach #1
+    //@Binding var isPresented: Bool
+
+    // Approach #2
+    @Environment(\.dismiss) var dismiss
+
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        ZStack {
+            Color.yellow
+            VStack {
+                Text("This is my modal content.")
+                Button("Close") {
+                    //isPresented = false // Approach #1
+                    dismiss() // Approach #2
+                }.buttonStyle(.bordered)
+            }
+        }.edgesIgnoringSafeArea(.bottom)
+    }
+}
+
+struct ContentView: View {
+    @State private var isSheetPresented = false
+
+    var body: some View {
+        VStack {
+            Text("This is my main view.")
+            Button("Show Sheet") { isSheetPresented = true }
+                .buttonStyle(.bordered)
+                .sheet(isPresented: $isSheetPresented) {
+                    // Only need to pass this argument in approach #1.
+                    //MySheetView(isPresented: $isSheetPresented)
+                    MySheetView()
+                }
+        }
     }
 }
 
